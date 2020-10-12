@@ -1,4 +1,4 @@
-<script type="text/html" data-template-name="aliyun-datahub">
+<script type="text/html" data-template-name="aliyun-datahub-server">
     <div class="form-row">
         <label for="node-config-input-name"> Name </label>
         <input type="text" id="node-config-input-name" />
@@ -14,7 +14,7 @@
     <div class="form-row">
         <label for="node-config-input-key"> Key</label>
         <input
-            type="password"
+            type="text"
             id="node-config-input-key"
             placeholder="access-key"
         />
@@ -27,17 +27,23 @@
             placeholder="access-secret"
         />
     </div>
+    <div class="form-row">
+        <label for="node-config-input-axiosOptions"> AxiosOptions</label>
+        <input
+            type="text"
+            id="node-config-input-axiosOptions"
+            placeholder='{ "timeout": 1000 }'
+        />
+    </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType("aliyun-datahub", {
+    RED.nodes.registerType("aliyun-datahub-server", {
         category: "config",
         color: "#ff6a00",
         defaults: {
             name: { value: "" },
-            endpoint: {
-                value: "",
-                required: true,
-            },
+            endpoint: { value: "", required: true },
+            axiosOptions: { value: "{}" },
         },
         credentials: {
             key: { type: "text" },
@@ -47,20 +53,17 @@
         outputs: 1,
         icon: "file.png",
         label: function () {
-            return this.name || "aliyun-datahub";
+            return this.name || "aliyun-datahub-server";
         },
     });
 </script>
-<script type="text/html" data-help-name="aliyun-datahub">
+<script type="text/html" data-help-name="aliyun-datahub-server">
     <p>A config node for Aliyun Datahub</p>
 </script>
 
-<script type="text/html" data-template-name="aliyun-datahub in">
+<script type="text/html" data-template-name="datahub">
     <div class="form-row">
-        <label for="node-input-name">
-            <i class="fa fa-tag"></i>
-            Name
-        </label>
+        <label for="node-input-name"> Name </label>
         <input type="text" id="node-input-name" />
     </div>
     <div class="form-row">
@@ -74,75 +77,41 @@
         <label for="node-input-project"> Project</label>
         <input type="text" id="node-input-project" placeholder="project name" />
     </div>
+    <div class="form-row">
+        <label for="node-input-topic"> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="topic name" />
+    </div>
+    <div class="form-row">
+        <label for="node-input-action"> Action</label>
+        <select id="node-input-action">
+            <option value="getTopic">getTopic</option>
+            <option value="getCursor">getCursor</option>
+            <option value="pull">pull</option>
+            <option value="push">push</option>
+            <option value="listTopics">listTopics</option>
+        </select>
+    </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType("aliyun-datahub in", {
-        category: "network",
+    RED.nodes.registerType("datahub", {
+        category: "aliyun",
         color: "#ff6a00",
         defaults: {
-            server: { type: "aliyun-datahub" },
+            server: { type: "aliyun-datahub-server" },
             name: { value: "" },
             project: { value: "" },
+            topic: { value: "" },
+            action: { value: "getTopic" },
         },
         inputs: 1,
         outputs: 1,
         icon: "white-globe.svg",
         label: function () {
-            return this.name || "aliyun-datahub in";
+            return this.name || "datahub";
         },
     });
 </script>
-<script type="text/html" data-help-name="aliyun-datahub in">
-    <p>A node for Aliyun Datahub</p>
-    <h3>Outputs</h3>
-    <dl class="message-properties">
-        <dt>
-            payload
-            <span class="property-type">string | buffer</span>
-        </dt>
-        <h3>Details</h3>
-        <p>Some more information about the node.</p>
-    </dl>
-</script>
-
-<script type="text/html" data-template-name="aliyun-datahub out">
-    <div class="form-row">
-        <label for="node-input-name">
-            <i class="fa fa-tag"></i>
-            Name
-        </label>
-        <input type="text" id="node-input-name" />
-    </div>
-    <div class="form-row">
-        <label for="node-input-server">
-            <i class="icon-bookmark"></i>
-            Server
-        </label>
-        <input type="text" id="node-input-server" />
-    </div>
-    <div class="form-row">
-        <label for="node-input-project"> Project</label>
-        <input type="text" id="node-input-project" placeholder="project name" />
-    </div>
-</script>
-<script type="text/javascript">
-    RED.nodes.registerType("aliyun-datahub out", {
-        category: "network",
-        color: "#ff6a00",
-        defaults: {
-            server: { type: "aliyun-datahub" },
-            name: { value: "" },
-            project: { value: "" },
-        },
-        inputs: 1,
-        outputs: 1,
-        icon: "file.png",
-        label: function () {
-            return this.name || "aliyun-datahub out";
-        },
-    });
-</script>
-<script type="text/html" data-help-name="aliyun-datahub out">
+<script type="text/html" data-help-name="datahub">
     <p>A node for Aliyun Datahub</p>
     <h3>Outputs</h3>
     <dl class="message-properties">
